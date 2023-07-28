@@ -28,10 +28,11 @@ const mongoURL = "mongodb+srv://tomaspf33:<coder>@cluster0.hwqwlmp.mongodb.net/?
 const enviroment = async () => {await mongoose.connect(mongoURL)};
 enviroment();
 app.use(session({
-	store: MongoStore.create({mongoURL}),
+	store: MongoStore.create({mongoUrl : mongoURL}),
 	secret: "<TOKEN>",
 	resave: false,
 	saveUninitialized: true,
+	
 }))
 
 // Passport 
