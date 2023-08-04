@@ -10,9 +10,20 @@ const port = 8080;
 import productRouter from "./routes/product.routes.js"
 import chatRouter from "./routes/chat.routes.js"
 import cartRouter from "./routes/cart.routes.js"
-import viewsRouter from "./routes/views.routes.js"
+import viewsRouter from "./routes/views.router.js"
 import cookiesRouter from "./routes/cookies.router.js"
 import sessionsRouter from "./routes/sessions.router.js"
+
+
+// Router 
+
+import router from './router/router.js'
+
+// Custom routers
+import CustomUsersRouter from './routes/customUsers.router.js';
+const customUsersRouter = new CustomUsersRouter();
+import CustomSessionsRouter from './routes/customSessions.router.js';
+const customSessionsRouter = new CustomSessionsRouter();
 
 //Utils
 import __dirname from "./utils.js";
@@ -25,16 +36,18 @@ import mongoose from "mongoose";
 import { messageModel } from "./dao/mongo/models/chat.model.js";
 import { productModel } from "./dao/mongo/models/product.model.js";
 const mongoURL = "mongodb+srv://tomaspf33:<coder>@cluster0.hwqwlmp.mongodb.net/?retryWrites=true&w=majority";
-const enviroment = async () => {await mongoose.connect(mongoURL)};
+const enviroment = async () => {
+	await mongoose.connect(mongoURL);
+};
 enviroment();
-app.use(session({
-	store: MongoStore.create({mongoUrl : mongoURL}),
-	secret: "<TOKEN>",
-	resave: false,
-	saveUninitialized: true,
-	
-}))
-
+app.use(
+	session({
+		store: MongoStore.create({ mongoURL }),
+		secret: "<SECRET>",
+		resave: false,
+		saveUninitialized: true,
+	})
+);
 // Passport 
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -64,7 +77,9 @@ app.use("/api/cookies",cookiesRouter);
 app.use("/api/sessions",sessionsRouter);
 app.use("/api/chat", chatRouter);
 app.use("/", viewsRouter);
-app.use("/chat", chatRouter);
+app.use('/api/custom/users', customUsersRouter.getRouter());
+app.use('/api/custom/sessions', customSessionsRouter.getRouter());
+router(app);
 
 
 // Contactar DB

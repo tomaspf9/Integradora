@@ -4,10 +4,6 @@ const sessions = Router();
 // Passport
 import passport from 'passport';
 
-// Controllers
-import authController from '../controllers/auth.controller.js';
-import adminController from "../controllers/admin.controller.js"
-
 // Endpoint para loguearse:
 sessions.post("/login", passport.authenticate('login'), async (req, res) => {
 	try {
@@ -32,7 +28,8 @@ sessions.post('/loginjwt', passport.authenticate('jwt'), async (req, res) => {
 			email: req.user.email,
 			role: req.user.role,
 		};
-		return res.status(200).send({ status: 'success', response: 'User loged' });
+		const access_token = generateToken(user);
+		return res.status(200).send({ status: 'success', token: access_token });
 	} catch (err) {
 		return res.status(500).json({ error: err.message });
 	}
@@ -78,16 +75,9 @@ sessions.post('/logout', (req, res) => {
 });
 
 // Endpoints para logearse con GitHub:
-sessions.get(
-	'/github',
-	passport.authenticate('github'),
-	async (req, res) => {}
-);
+sessions.get('/github', passport.authenticate('github'), async (req, res) => {});
 
-sessions.get(
-	'/githubCallback',
-	passport.authenticate('github'),
-	async (req, res) => {
+sessions.get('/githubCallback', passport.authenticate('github'), async (req, res) => {
 		req.session.user = req.user;
 		res.redirect('/');
 	}

@@ -1,9 +1,9 @@
 const cookieExtractor = (req) => {
-    let token = null;
-    if (req && req.cookies) {
-      token = req.cookies["authToken"];
-    };
-    return token;
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["authToken"];
   };
-  
-  export default cookieExtractor;
+  return token;
+};
+
+export default cookieExtractor;
