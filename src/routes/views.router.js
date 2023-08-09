@@ -9,9 +9,13 @@ import { cartModel } from "../dao/mongo/models/cart.model.js";
 // JWT
 import { authToken } from "../utils/jwt.utils.js";
 
+// Env
+import config from '../../config.js'
+const cookieSecret = config.COOKIE_SECRET;
+
 // Cookie parser
 import cookieParser from "cookie-parser";
-views.use(cookieParser("<COOKIESECRET>"));
+views.use(cookieParser(cookieSecret));
 
 // Función para validar y crear un carrito para el usuario:
 async function cartCookie(req, res) {

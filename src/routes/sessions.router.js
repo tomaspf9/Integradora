@@ -74,6 +74,27 @@ sessions.post('/logout', (req, res) => {
 	}
 });
 
+// Endpoint para registrarse:
+sessions.post(
+	'/current',
+	passport.authenticate('register'),
+	async (req, res) => {
+		try {
+			req.session.user = {
+				first_name: req.user.first_name,
+				last_name: req.user.last_name,
+				email: req.user.email,
+				role: req.user.role,
+			};
+			return res
+				.status(200)
+				.send({ status: 'success', response: 'User created' });
+		} catch (err) {
+			return res.status(500).json({ status: 'error', response: err.message });
+		}
+	}
+);
+
 // Endpoints para logearse con GitHub:
 sessions.get('/github', passport.authenticate('github'), async (req, res) => {});
 

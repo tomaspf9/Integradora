@@ -7,12 +7,13 @@ const port = 8080;
 
 // Import de routes
 
-import productRouter from "./routes/product.routes.js"
-import chatRouter from "./routes/chat.routes.js"
-import cartRouter from "./routes/cart.routes.js"
-import viewsRouter from "./routes/views.router.js"
-import cookiesRouter from "./routes/cookies.router.js"
-import sessionsRouter from "./routes/sessions.router.js"
+import productRouter from "./routes/product.routes.js";
+import chatRouter from "./routes/chat.routes.js";
+import cartRouter from "./routes/cart.routes.js";
+import viewsRouter from "./routes/views.router.js";
+import cookiesRouter from "./routes/cookies.router.js";
+import sessionsRouter from "./routes/sessions.router.js";
+import forkRouter from "./routes/fork.router.js";
 
 
 // Router 
@@ -49,8 +50,8 @@ app.use(
 	})
 );
 // Passport 
-import passport from "passport";
-import initializePassport from "./config/passport.config.js";
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,15 +60,20 @@ app.use(passport.session());
 
 import cookieParser from "cookie-parser";
 
+//Morgan
+import morgan from "morgan";
+
 
 //  Handlebars y middlewares
 
-import handlebars from "express-handlebars";
-app.engine("handlebars", handlebars.engine());
-app.set("view engine", "handlebars");
-app.set("views", __dirname + "/views");
-app.use(express.static(__dirname + "/public"));
+import handlebars from 'express-handlebars';
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'handlebars');
+app.use(express.static(__dirname + '/public'));
 
+
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -79,6 +85,7 @@ app.use("/api/chat", chatRouter);
 app.use("/", viewsRouter);
 app.use('/api/custom/users', customUsersRouter.getRouter());
 app.use('/api/custom/sessions', customSessionsRouter.getRouter());
+app.use('/api/fork', forkRouter);
 router(app);
 
 
@@ -96,7 +103,7 @@ mongoose.connect(mongoURL, (err) => {
 // Server y socket
 
 import { Server } from "socket.io";
-const server = app.listen(port, () => {
+const server = app.listen(port, host, () => {
   console.log(`Server OK en ${host}:${port}`);
 });
 

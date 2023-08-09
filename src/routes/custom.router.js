@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 
+// Env
+import config from '../../config.js'
+const jwtSecret = config.JWT_SECRET;
+
 export default class CustomRouter {
 	constructor() {
 		this.router = Router();
@@ -68,7 +72,7 @@ export default class CustomRouter {
 			}
 
 			const token = authHeaders.split(' ')[1];
-			const user = jwt.verify(token, "<SECRET>");
+			const user = jwt.verify(token, jwtSecret);
 
 			if (!policies.includes(user.role.toUpperCase())) {
 				return res.status(403).send({ status: 'error', error: 'Forbidden' });
