@@ -17,3 +17,5 @@ dictionary.post('/:word', async (req, res) => {
 dictionary.get('*', async (req, res) => {
 	return res.sendStatus(404).send('Cannot get the specified word');
 });
+
+export default dictionary;

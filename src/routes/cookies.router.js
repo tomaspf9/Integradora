@@ -2,7 +2,7 @@ import { Router } from "express";
 import cookieParser from "cookie-parser";
 
 // Env
-import config from '../../config.js'
+import config from '../config/enviroment.config.js'
 const cookieSecret = config.COOKIE_SECRET;
 
 const cookies = Router();

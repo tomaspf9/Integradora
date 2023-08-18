@@ -3,7 +3,7 @@ import CustomRouter from './custom.router.js';
 import jwt from 'jsonwebtoken';
 
 // Env
-import config from '../../config.js'
+import config from '../config/enviroment.config.js'
 const jwtSecret = config.JWT_SECRET;
 
 export default class CustomSessionsRouter extends CustomRouter {

@@ -10,7 +10,7 @@ import { cartModel } from "../dao/mongo/models/cart.model.js";
 import { authToken } from "../utils/jwt.utils.js";
 
 // Env
-import config from '../../config.js'
+import config from '../config/enviroment.config.js'
 const cookieSecret = config.COOKIE_SECRET;
 
 // Cookie parser
