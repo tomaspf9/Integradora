@@ -1,22 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class='products-container'>
+	<div class='products-list'>
 
-  {{!-- Google font --}}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+			{{#each payload}}
+			<div class="product-item">
 
-  {{!-- CSS --}}
-  <link rel="stylesheet" href="/css/{{style}}">
+				<a href="./product/{{this._id}}" class="product-link">
+					<p>Product: {{this.title}}</p>
+					<p>Category: {{this.category}}</p>
+					<p>Price: ${{this.price}}</p>
+					<p>Stock: {{this.stock}}</p>
+				</a>
 
-  <title>{{documentTitle}}</title>
-</head>
+				<form
+					class='product-form'
+					cart="{{../cart}}"
+					product="{{this._id}}"
+				>
+				<input type='submit' value='Add to cart' class="product-button" />
+			</form>
 
-<body>
-  {{{body}}}
-</body>
+			</div>
+		{{/each}}
 
-</html>
+	</div>
+
+	<div class='paginate-container'>
+		{{#if hasPrevPage}}
+			<a
+				href='/products?query={{query}}&limit={{limit}}&page={{prevPage}}&sort={{sort}}'
+			><button class='paginate-button'>Previus</button></a>
+		{{/if}}
+
+		<p class='paginate-current'>{{page}}</p>
+
+		{{#if hasNextPage}}
+			<a
+				href='/products?query={{query}}&limit={{limit}}&page={{nextPage}}&sort={{sort}}'
+			><button class='paginate-button'>Next</button></a>
+		{{/if}}
+	</div>
+</div>
+
+<script src='/js/products.js'></script>

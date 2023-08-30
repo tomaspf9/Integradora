@@ -18,6 +18,7 @@ import setupSocket from "./utils/socket.utils.js";
 // VE
 const mongoUrl = config.MONGO_URL;
 const mongoSessionSecret = config.MONGO_URL;
+const cookieSecret = config.COOKIE_SECRET;
 const PORT = config.PORT;
 const HOST = config.HOST;
 
@@ -55,14 +56,13 @@ app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(cookieSecret));
 
 
 
 // Socket & Server
-const httpServer = app.listen(PORT, HOST, () => {
+app.listen(PORT, HOST, () => {
 	console.log(`Server up on http://${HOST}:${PORT}`);
 });
-setupSocket(httpServer);
 
 router(app);
