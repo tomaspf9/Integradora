@@ -1,7 +1,9 @@
 import { userModel } from '../dao/mongo/models/user.model.js';
 import { adminModel } from '../dao/mongo/models/admin.model.js';
-import { hashPassword, isValidPassword } from '../utils/hash.utils.js';
-import config from '../config/environment.config.js';
+import { createHash, isValidPassword } from '../utils/hash.utils.js';
+import cookieExtractor from '../utils/cookieExtractor.utils.js';
+
+// Passport
 import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
@@ -13,19 +15,93 @@ const githubCallbackUrl = config.GITHUB_CALLBACK_URL;
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
 	passport.use(
+		'jwt',
+		new JWTStrategy(
+			{
+				jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+				secretOrKey: jwtSecret,
+			},
+			async (jwt_payload, done) => {
+				try {
+					return done(null, jwt_payload);
+				} catch (err) {
+					return done('Error:', err);
+				}
+			}
+		)
+	);
+
+	passport.use(
+		'register',
+		new LocalStrategy(
+			{ passReqToCallback: true, usernameField: 'email' },
+			async (req, username, password, done) => {
+				const { first_name, last_name, email } = req.body;
+				try {
+					if (email == 'adminCoder@coder.com') {
+						return done(null, false, {
+							status: 200,
+							message: 'Cant create an admin account',
+						});
+					}
+
+					const user = await userModel.findOne({ email: username });
+
+					if (user) {
+						return done(null, false, {
+							status: 200,
+							message: 'User already exist',
+						});
+					}
+
+					const newUser = {
+						first_name,
+						last_name,
+						email,
+						password: createHash(password),
+						role: 'user',
+					};
+
+					const result = await userModel.create(newUser);
+					return done(null, result, { message: 'User created' });
+				} catch (err) {
+					return done('Error:', err);
+				}
+			}
+		)
+	);
+
+	passport.use(
 		'login',
 		new LocalStrategy(
 			{ usernameField: 'email' },
 			async (username, password, done) => {
 				try {
-					if (username == 'adminCoder@coder.com') {
-						const admin = await adminModel.findOne({ email: username });
-						if (!admin || !isValidPassword(admin, password)) return done(null, false, `Invalid credentials.`);
-						return done(null, admin);
-					};
+					if (
+						username == 'adminCoder@coder.com' &&
+						password == 'adminCod3r123'
+					) {
+						const user = await adminModel.findOne({ email: username });
+						if (!user) {
+							const user = await adminModel.create({
+								email: 'adminCoder@coder.com',
+								password: createHash(password),
+								role: 'admin',
+							});
+							return done(null, user);
+						}
+						return done(null, user);
+					}
 
 					const user = await userModel.findOne({ email: username });
-					if (!user || !isValidPassword(user, password)) return done(null, false, `Invalid credentials.`);
+					if (!user) {
+						return done(null, false, { message: 'User doesnt exist' });
+					}
+
+					if (!isValidPassword(user, password)) {
+						return done(null, false, { message: 'Invalid credentials' });
+					}
+
 					return done(null, user);
 				} catch (err) {
 					return done(err);
@@ -39,23 +115,30 @@ const initializePassport = () => {
 		new LocalStrategy(
 			{ passReqToCallback: true, usernameField: 'email' },
 			async (req, username, password, done) => {
+				const { first_name, last_name, email } = req.body;
 				try {
-					if (username == 'adminCoder@coder.com') return done(null, false, `Can't create an admin account.`)
+					if (email == 'adminCoder@coder.com') {
+						return done(null, false);
+					}
 
 					const user = await userModel.findOne({ email: username });
-					if (user) return done(null, false, `Email already exist.`);
 
-					const { first_name, last_name } = req.body;
-					const newUser = await userModel.create({
+					if (user) {
+						return done(null, false);
+					}
+
+					const newUser = {
 						first_name,
 						last_name,
-						email: username,
-						password: hashPassword(password),
+						email,
+						password: createHash(password),
 						role: 'user',
-					});
-					return done(null, newUser);
+					};
+
+					const result = await userModel.create(newUser);
+					return done(null, result);
 				} catch (err) {
-					return done(err);
+					return done('Error:', err);
 				}
 			}
 		)
@@ -71,19 +154,23 @@ const initializePassport = () => {
 			},
 			async (accesToken, refreshToken, profile, done) => {
 				try {
-					let user = await userModel.findOne({ email: profile._json.email });
+					const user = await userModel.findOne({ email: profile._json.email });
 					if (!user) {
 						user = await userModel.create({
 							first_name: profile._json.name.split(' ')[0],
 							last_name: profile._json.name.split(' ')[1],
 							email: profile._json.email,
 							password: '',
-						});
-					}
-					return done(null, user);
+						};
+
+						const result = await userModel.create(newUser);
+						return done(null, result);
+					} else {
+						done(null, user);
+					};
 				} catch (err) {
-					return done(err);
-				}
+					return done('Error:', err);
+				};
 			}
 		)
 	);

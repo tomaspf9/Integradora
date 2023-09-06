@@ -44,6 +44,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
+<<<<<<< HEAD
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookieSecret));
 app.use(morgan('dev'));
@@ -51,7 +52,15 @@ app.use(cors());
 
 const httpServer = app.listen(PORT, HOST, () => {
 	logger.info(`Server up on http://${HOST}:${PORT}`)
+=======
+app.use(cookieParser(cookieSecret));
+
+
+
+// Socket & Server
+app.listen(PORT, HOST, () => {
+	console.log(`Server up on http://${HOST}:${PORT}`);
+>>>>>>> dabec96f357d0dc304824d02a2679c0a4c871ac9
 });
-setupSocket(httpServer);
 
 router(app);
