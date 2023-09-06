@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { messageModel } from '../dao/mongo/models/chat.model.js';
+import { messageModel } from '../dao/mongo/models/messages.model.js';
 import { productModel } from '../dao/mongo/models/product.model.js';
 
 function setupSocket(httpServer) {
