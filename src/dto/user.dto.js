@@ -1,13 +1,10 @@
-class ProductDTO {
-    constructor (product) {
-      this.title = product.title;
-      this.description = product.description;
-      this.code = product.code.replace(/\s/g, '').toLowerCase();
-      this.price = product.price;
-      this.status = true;
-      this.stock = product.stock;
-      this.category = product.category.toLowerCase();
-    };
-  };
-  
-  export default ProductDTO;
+class UserDTO {
+	constructor(user) {
+		this.first_name = user.first_name;
+		this.last_name = user.last_name;
+		this.email = user.email;
+		this.role = user.role;
+	}
+}
+
+export default UserDTO;

@@ -1,12 +1,14 @@
-import { hashPassword, isValidPassword } from "../../utils/hash.utils.js"
+import { hashPassword, isValidPassword } from '../../utils/hash.utils.js';
 
 class SessionsMemoryDAO {
 	constructor() {
 		this.users = [];
-		this.admins = [{
-			email: "adminCoder@coder.com",
-			password: hashPassword("adminCod3r123")
-		}];
+		this.admins = [
+			{
+				email: 'adminCoder@coder.com',
+				password: hashPassword('adminCod3r123'),
+			},
+		];
 	}
 
 	getLoginDao(req, res) {
@@ -17,13 +19,15 @@ class SessionsMemoryDAO {
 
 			if (email == 'adminCoder@coder.com') {
 				const admin = admins.find(admin => admin.email == email);
-				if (!admin || !isValidPassword(admin, password)) return `Invalid credentials.`
+				if (!admin || !isValidPassword(admin, password))
+					return `Invalid credentials.`;
 				req.session.user = admin;
 				return admin;
-			};
+			}
 
 			const user = users.find(user => user.email == email);
-			if (!user || !isValidPassword(user, password)) return `Invalid credentials.`;
+			if (!user || !isValidPassword(user, password))
+				return `Invalid credentials.`;
 			req.session.user = user;
 			return user;
 		} catch (error) {
@@ -36,7 +40,8 @@ class SessionsMemoryDAO {
 			const users = this.users;
 			const { email, password, first_name, last_name } = req.body;
 
-			if (email == 'adminCoder@coder.com') return `You can't create an admin account.`;
+			if (email == 'adminCoder@coder.com')
+				return `You can't create an admin account.`;
 
 			const user = users.find(user => user.email == email);
 			if (user) return `Email already exist.`;
@@ -45,7 +50,7 @@ class SessionsMemoryDAO {
 				first_name,
 				last_name,
 				email,
-				password: hashPassword(password)
+				password: hashPassword(password),
 			};
 			users.push(newUser);
 			req.session.user = newUser;
@@ -54,10 +59,10 @@ class SessionsMemoryDAO {
 			return `${error}`;
 		}
 	}
-	
+
 	getGithubDao() {
 		try {
-			return `Github login is not available in local.`
+			return `Github login is not available in local.`;
 		} catch (error) {
 			return `${error}`;
 		}
@@ -65,7 +70,7 @@ class SessionsMemoryDAO {
 
 	getGithubCallbackDao() {
 		try {
-			return `Github login is not available in local.`
+			return `Github login is not available in local.`;
 		} catch (error) {
 			return `${error}`;
 		}
@@ -74,6 +79,34 @@ class SessionsMemoryDAO {
 	getLogoutDao(req, res) {
 		try {
 			return req.session.destroy();
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRestoreDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRestoreCallbackDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getPremiumDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getUserDao(req, res) {
+		try {
 		} catch (error) {
 			return `${error}`;
 		}

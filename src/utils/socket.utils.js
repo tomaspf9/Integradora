@@ -6,20 +6,20 @@ import logger from './logger.util.js';
 function setupSocket(httpServer) {
 	const io = new Server(httpServer);
 
-	io.on('connection', async (socket) => {
+	io.on('connection', async socket => {
 		logger.info(`Client ${socket.id} connected`);
 
 		// Buscar productos en DB, escuchar cambios y enviar data:
 		const products = await productModel.find().lean();
 		io.emit('products', products);
 
-		productModel.watch().on('change', async (change) => {
+		productModel.watch().on('change', async change => {
 			const products = await productModel.find().lean();
 			io.emit('products', products);
 		});
 
 		// Recibir usuarios, mensajes y crear entrada en DB:
-		socket.on('user', async (data) => {
+		socket.on('user', async data => {
 			await messageModel.create({
 				user: data.user,
 				message: data.message,
@@ -29,7 +29,7 @@ function setupSocket(httpServer) {
 			io.emit('messagesDB', messagesDB);
 		});
 
-		socket.on('message', async (data) => {
+		socket.on('message', async data => {
 			await messageModel.create({
 				user: data.user,
 				message: data.message,

@@ -1,18 +1,18 @@
 import persistence from '../config/app.config.js';
 import environment from '../../db/db.js';
 
-let cartsDAO;
+let productsDAO;
 
 switch (persistence) {
 	case 'memory':
-		const { default: MemoryDAO } = await import('./memory/carts.memory.js');
-		cartsDAO = MemoryDAO;
+		const { default: MemoryDAO } = await import('./memory/products.memory.js');
+		productsDAO = MemoryDAO;
 		break;
 	case 'mongo':
 		environment();
-		const { default: MongoDAO } = await import('./mongo/carts.mongo.js');
-		cartsDAO = MongoDAO;
+		const { default: MongoDAO } = await import('./mongo/products.mongo.js');
+		productsDAO = MongoDAO;
 		break;
 }
 
-export default cartsDAO;
+export default productsDAO;

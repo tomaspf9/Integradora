@@ -1,18 +1,117 @@
-import persistence from '../config/app.config.js';
-import environment from '../../db/db.js';
+import { hashPassword, isValidPassword } from '../../utils/hash.utils.js';
 
-let sessionsDAO;
+class SessionsMemoryDAO {
+	constructor() {
+		this.users = [];
+		this.admins = [
+			{
+				email: 'adminCoder@coder.com',
+				password: hashPassword('adminCod3r123'),
+			},
+		];
+	}
 
-switch (persistence) {
-	case 'memory':
-		const { default: MemoryDAO } = await import('./memory/sessions.memory.js');
-		sessionsDAO = MemoryDAO;
-		break;
-	case 'mongo':
-		environment();
-		const { default: MongoDAO } = await import('./mongo/sessions.mongo.js');
-		sessionsDAO = MongoDAO;
-		break;
+	getLoginDao(req, res) {
+		try {
+			const users = this.users;
+			const admins = this.admins;
+			const { email, password } = req.body;
+
+			if (email == 'adminCoder@coder.com') {
+				const admin = admins.find(admin => admin.email == email);
+				if (!admin || !isValidPassword(admin, password))
+					return `Invalid credentials.`;
+				req.session.user = admin;
+				return admin;
+			}
+
+			const user = users.find(user => user.email == email);
+			if (!user || !isValidPassword(user, password))
+				return `Invalid credentials.`;
+			req.session.user = user;
+			return user;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRegisterDao(req, res) {
+		try {
+			const users = this.users;
+			const { email, password, first_name, last_name } = req.body;
+
+			if (email == 'adminCoder@coder.com')
+				return `You can't create an admin account.`;
+
+			const user = users.find(user => user.email == email);
+			if (user) return `Email already exist.`;
+
+			const newUser = {
+				first_name,
+				last_name,
+				email,
+				password: hashPassword(password),
+			};
+			users.push(newUser);
+			req.session.user = newUser;
+			return newUser;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getGithubDao() {
+		try {
+			return `Github login is not available in local.`;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getGithubCallbackDao() {
+		try {
+			return `Github login is not available in local.`;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getLogoutDao(req, res) {
+		try {
+			return req.session.destroy();
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRestoreDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRestoreCallbackDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getPremiumDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getUserDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
 }
 
-export default sessionsDAO;
+const MemoryDAO = new SessionsMemoryDAO();
+export default MemoryDAO;

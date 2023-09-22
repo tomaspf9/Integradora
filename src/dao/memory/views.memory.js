@@ -5,7 +5,7 @@ import {
 	validateQuery,
 	multiply,
 	getTotal,
-	memoryCart
+	memoryCart,
 } from '../../utils/functions.utils.js';
 
 import productDAO from './products.memory.js';
@@ -29,7 +29,7 @@ class ViewsMemoryDAO {
 				cart,
 				style: 'home.css',
 				documentTitle: 'Home',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -42,7 +42,7 @@ class ViewsMemoryDAO {
 				header: false,
 				style: 'login.css',
 				documentTitle: 'Login',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -55,7 +55,7 @@ class ViewsMemoryDAO {
 				header: false,
 				style: 'register.css',
 				documentTitle: 'Register',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -70,7 +70,7 @@ class ViewsMemoryDAO {
 				user,
 				style: 'chat.css',
 				documentTitle: 'Chat',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -90,7 +90,7 @@ class ViewsMemoryDAO {
 			query = validateQuery(query);
 
 			if (products.length < 1) return `No products found for this search`;
-	
+
 			if (sort === 'asc') {
 				products.sort((a, b) => a.price - b.price);
 			} else {
@@ -109,7 +109,7 @@ class ViewsMemoryDAO {
 				cart,
 				documentTitle: 'Products',
 				style: 'products.css',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -131,7 +131,7 @@ class ViewsMemoryDAO {
 				cart,
 				style: 'product.css',
 				documentTitle: 'Product',
-			}
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;
@@ -159,11 +159,18 @@ class ViewsMemoryDAO {
 				documentTitle: 'Cart',
 				helpers: {
 					multiply,
-					getTotal
+					getTotal,
 				},
 				payload: existCart.products,
-			}
+			};
 			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	async getRestoreDao(req, res) {
+		try {
 		} catch (error) {
 			return `${error}`;
 		}
@@ -172,6 +179,3 @@ class ViewsMemoryDAO {
 
 const MemoryDAO = new ViewsMemoryDAO();
 export default MemoryDAO;
-
-
-

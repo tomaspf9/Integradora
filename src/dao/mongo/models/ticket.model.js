@@ -1,18 +1,14 @@
 import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-	first_name: String,
-	last_name: String,
-	email: {
+const ticketSchema = new mongoose.Schema({
+	code: {
 		type: String,
 		unique: true,
-		required: true,
 	},
-	password: String,
-	role: {
-		type: String,
-		default: 'user',
-	},
+	purchase_datetime: String,
+	purchase_products: Array,
+	amount: Number,
+	purchaser: Object,
 });
 
-export const userModel = mongoose.model('Users', userSchema);
+export const ticketModel = mongoose.model('Tickets', ticketSchema);

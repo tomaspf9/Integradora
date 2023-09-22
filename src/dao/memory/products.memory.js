@@ -8,7 +8,7 @@ class ProductsMemoryDAO {
 	getProductsDao() {
 		try {
 			const products = this.data;
-			if(!products) return `No products found.`
+			if (!products) return `No products found.`;
 			return products;
 		} catch (error) {
 			return `${error}`;
@@ -19,7 +19,7 @@ class ProductsMemoryDAO {
 		try {
 			const products = this.data;
 			const product = products.find(product => product._id == pid);
-			if(!product) return `No product found with ID '${pid}'.`
+			if (!product) return `No product found with ID '${pid}'.`;
 			return product;
 		} catch (error) {
 			return `${error}`;
@@ -39,8 +39,8 @@ class ProductsMemoryDAO {
 			};
 			products.push(newProduct);
 
-			if(!newProduct) return `No product was created.`
-			return newProduct
+			if (!newProduct) return `No product was created.`;
+			return newProduct;
 		} catch (error) {
 			return `${error}`;
 		}
@@ -51,7 +51,7 @@ class ProductsMemoryDAO {
 			const products = this.data;
 			const productToModify = products.find(item => item._id == pid);
 			const productIndex = products.findIndex(item => item._id == pid);
-			if(!productToModify) return `No product found with ID '${pid}'.`
+			if (!productToModify) return `No product found with ID '${pid}'.`;
 
 			const newProduct = {
 				_id: productToModify._id,
@@ -65,12 +65,12 @@ class ProductsMemoryDAO {
 		}
 	}
 
-	deleteProductDao(pid) {
+	deleteProductDao(req, res, pid) {
 		try {
 			const products = this.data;
 			const product = products.find(item => item._id == pid);
 			const productIndex = products.findIndex(item => item._id == pid);
-			if(!product) return `No product found with ID '${pid}'.`
+			if (!product) return `No product found with ID '${pid}'.`;
 			products.splice(productIndex, 1);
 			return products;
 		} catch (error) {
@@ -78,9 +78,8 @@ class ProductsMemoryDAO {
 		}
 	}
 
-	async generateProductsDao() {
+	async generateProductsDao(req, res) {
 		try {
-
 			return products;
 		} catch (error) {
 			return `${error}`;

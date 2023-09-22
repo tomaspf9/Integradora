@@ -1,5 +1,5 @@
 import { cartModel } from '../dao/mongo/models/cart.model.js';
-import cartsDao from "../dao/memory/carts.memory.js";
+import cartsDao from '../dao/memory/carts.memory.js';
 
 export function validatePage(page) {
 	if (page == undefined || page == '' || page < 1 || isNaN(page)) page = 1;
@@ -53,7 +53,7 @@ export async function mongoCart(req, res) {
 	const existCart = await cartModel.findById(cart);
 
 	if (existCart) {
-		return cart
+		return cart;
 	} else if (cart && !existCart) {
 		const createdCart = await cartModel.create({ products: [] });
 		const cartId = createdCart.id;
@@ -72,7 +72,7 @@ export function memoryCart(req, res) {
 	const existCart = carts.find(item => item._id == cart);
 
 	if (existCart) {
-		return cart
+		return cart;
 	} else if (cart && !existCart) {
 		const newCart = {
 			_id: cart,
